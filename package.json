@@ -1,23 +1,29 @@
 {
-  "name": "vsc-plugin-template",
-	"displayName": "vsc-plugin-template",
-	"description": "Visual Studio Code TypeScript plugin - template.",
+	"name": "vsc-ava-test-runner",
+	"displayName": "AVA test runner",
+	"description": "AVA test runner.",
+	"publisher": "sculpt0r",
+	"repository": "https://github.com/sculpt0r/vsc-ava-test-runner",
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.67.0"
 	},
 	"categories": [
-		"Other"
+		"Testing"
 	],
 	"activationEvents": [
-        "onCommand:vsc-plugin-template.helloWorld"
+		"*"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "vsc-plugin-template.helloWorld",
-				"title": "Hello World"
+				"command": "vsc-ava-test-runner.runTestsInFile",
+				"title": "AVA: Run tests in this file"
+			},
+			{
+				"command": "vsc-ava-test-runner.runTestsInFile_debug",
+				"title": "AVA [debug]: Run tests in this file"
 			}
 		]
 	},
