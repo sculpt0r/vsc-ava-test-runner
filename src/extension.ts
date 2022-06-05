@@ -1,7 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import { runTestsInFile, runTestsInFile_debug } from './commands';
+import { runTestsInFile, runTestsInFileDebug } from './commands';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -15,10 +15,10 @@ export function activate(context: vscode.ExtensionContext) {
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
 	let runTestsCommand = vscode.commands.registerCommand('vsc-ava-test-runner.runTestsInFile',runTestsInFile);
-	let runTests_debugCommand = vscode.commands.registerCommand('vsc-ava-test-runner.runTestsInFile_debug',runTestsInFile_debug);
+	// let runTestsDebugCommand = vscode.commands.registerCommand('vsc-ava-test-runner.runTestsInFileDebug',runTestsInFileDebug);
 
 	context.subscriptions.push(runTestsCommand);
-	context.subscriptions.push(runTests_debugCommand);
+	// context.subscriptions.push(runTestsDebugCommand);
 }
 
 // this method is called when your extension is deactivated

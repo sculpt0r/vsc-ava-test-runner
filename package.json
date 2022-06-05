@@ -22,7 +22,7 @@
 				"title": "AVA: Run tests in this file"
 			},
 			{
-				"command": "vsc-ava-test-runner.runTestsInFile_debug",
+				"command": "vsc-ava-test-runner.runTestsInFileDebug",
 				"title": "AVA [debug]: Run tests in this file"
 			}
 		]
