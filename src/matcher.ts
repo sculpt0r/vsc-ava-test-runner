@@ -27,7 +27,7 @@ export function findEndTestTitle( content: string, char: string ): number {
 }
 
 export function getTestTitles( codeContent: string ): Array<[string, number]> {
-	const re = /test\(/g;
+	const re = /test( )?\(/g;
 	const eachLineRegExp = new RegExp( re );
 
 	let matches;

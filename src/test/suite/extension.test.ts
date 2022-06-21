@@ -8,16 +8,15 @@ import { getTestTitles } from '../../matcher';
 
 suite( 'Extension Test Suite', () => {
 	vscode.window.showInformationMessage( 'Start all tests.' );
+	test( 'get test title with whitespaces around test parenthesis', () =>{
+		const title = getTestTitles( `
+			test ( 'spaces', t => {})
+		` );
 
-
-
-	// test('`test (` is recognizable as test declaration', () => {
-	// 	const result = hasTestDeclaration('test (');
-
-	// 	assert.ok(result);
-	// });
-// neeed more test cases!!!!! wielolinijkowce itd
-// clean up w matcherach!
+		assert.deepEqual( title, [
+			[ 'spaces', 4 ]
+		] );
+	} );
 	test( 'get test title with single quotes', () =>{
 		const title = getTestTitles( `
 			test('single', t => {})
@@ -75,4 +74,5 @@ suite( 'Extension Test Suite', () => {
 			[ 'backtick multiline', 4 ]
 		] );
 	} );
+
 } );
