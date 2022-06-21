@@ -39,24 +39,20 @@ class AvaCodelens implements vscode.CodeLensProvider {
 		document: vscode.TextDocument,
 		token: vscode.CancellationToken
 	): vscode.ProviderResult<vscode.CodeLens[]> {
-		const codeLenses: Array<vscode.CodeLens> = [];
 
 		const text = document.getText();
 		const results = getTestTitles(text);
 
-		results.forEach( ([title, match]) => {
-
+		const codeLenses = results.map( ([title, match]) => {
 			const line = document.lineAt( document.positionAt( match ).line );
-
 			const position = new vscode.Position(line.lineNumber, 0);
-
 			const range = document.getWordRangeAtPosition(position);
 
 			// Need a range to apply CodeLens
-			if (range) {
-				const command = this.createRunTestCaseCommand(title); // Anything for now
-				codeLenses.push(new vscode.CodeLens(range, command));
-			}
+			const command = this.createRunTestCaseCommand(title); // Anything for now
+			// If title and match were found correctly
+			// It the range have to be valid
+			return new vscode.CodeLens(range!, command);
 		});
 
 		return codeLenses;
