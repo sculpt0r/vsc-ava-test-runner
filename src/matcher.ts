@@ -35,7 +35,9 @@ export function getTestTitles(codeContent: string): Array<[string, number]> {
 		const testCaseStartingContent = codeContent.slice(matches.index);
 		const [char, startPos] = findTestTitleOpeningCharacter(testCaseStartingContent);
 		const endPos = findEndTestTitle(testCaseStartingContent, char);
-		const title = testCaseStartingContent.slice(startPos + 1, endPos);
+		let title = testCaseStartingContent.slice(startPos + 1, endPos);
+		title = title.replace(/(\n|\t)/g, '');
+
 
 		testCases.push([
 			title,

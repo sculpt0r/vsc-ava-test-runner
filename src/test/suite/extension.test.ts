@@ -46,7 +46,7 @@ suite('Extension Test Suite', () => {
 			['double with spaces', 4]
 		]);
 	});
-	test('get test title in another line', () =>{
+	test("get test title in another line", () =>{
 		const title = getTestTitles(`
 			test(
 				'test title', t => {})
@@ -54,6 +54,25 @@ suite('Extension Test Suite', () => {
 
 		assert.deepEqual(title, [
 			['test title', 4]
+		]);
+	});
+	test("get test title in backticks", () =>{
+		const title = getTestTitles(`
+			test( \`backtick\`, t => {})
+		`);
+
+		assert.deepEqual(title, [
+			['backtick', 4]
+		]);
+	});
+	test("get test title in backticks multiline", () =>{
+		const title = getTestTitles(`
+			test( \`backtick
+			 multiline\`, t => {})
+		`);
+
+		assert.deepEqual(title, [
+			['backtick multiline', 4]
 		]);
 	});
 });
