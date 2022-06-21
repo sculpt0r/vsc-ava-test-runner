@@ -11,10 +11,40 @@
 	"rules": {
 		"@typescript-eslint/naming-convention": "warn",
 		"@typescript-eslint/semi": "warn",
+		"@typescript-eslint/type-annotation-spacing": [
+			"warn",
+			{
+				"before": false,
+				"after": true
+			}
+		],
+		"space-infix-ops": [
+			"error",
+			{
+				"int32Hint": false
+			}
+		],
+		"array-bracket-spacing": [
+			"warn",
+			"always",
+			{
+				"singleValue": true,
+				"objectsInArrays": true,
+				"arraysInArrays": true
+			}
+		],
 		"curly": "warn",
 		"eqeqeq": "warn",
 		"no-throw-literal": "warn",
-		"semi": "off"
+		"semi": "off",
+		"space-in-parens": [
+			"error",
+			"always"
+		],
+		"quotes": [
+			"error",
+			"single"
+		]
 	},
 	"ignorePatterns": [
 		"out",
