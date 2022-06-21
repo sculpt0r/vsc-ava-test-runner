@@ -1,11 +1,11 @@
 import * as vscode from 'vscode';
 
-export function runTestsInFile(){
+export function runTestsInFile(args:string){
 	console.log('all test runned!');
 	const activeFilePath = vscode.window.activeTextEditor?.document.uri.path;
 	if(activeFilePath !== undefined)
 	{
-		const cmd = `npx ava --verbose ${activeFilePath}`;
+		const cmd = `npx ava --verbose ${activeFilePath}${args}`;
 		runTerminalCmd(cmd);
 	} else {
 		vscode.window.showWarningMessage('No active file to run a test...');
