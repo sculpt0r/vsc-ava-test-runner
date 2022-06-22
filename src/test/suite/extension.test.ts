@@ -17,6 +17,7 @@ suite( 'Extension Test Suite', () => {
 			[ 'spaces', 4 ]
 		] );
 	} );
+
 	test( 'get test title with single quotes', () =>{
 		const title = getTestTitles( `
 			test('single', t => {})
@@ -36,6 +37,7 @@ suite( 'Extension Test Suite', () => {
 			[ 'double', 4 ]
 		] );
 	} );
+
 	test( 'get test title with double quote with spaces', () =>{
 		const title = getTestTitles( `
 			test("double with spaces", t => {})
@@ -45,6 +47,7 @@ suite( 'Extension Test Suite', () => {
 			[ 'double with spaces', 4 ]
 		] );
 	} );
+
 	test( 'get test title in another line', () =>{
 		const title = getTestTitles( `
 			test(
@@ -55,6 +58,7 @@ suite( 'Extension Test Suite', () => {
 			[ 'test title', 4 ]
 		] );
 	} );
+
 	test( 'get test title in backticks', () =>{
 		const title = getTestTitles( `
 			test( \`backtick\`, t => {})
@@ -64,6 +68,7 @@ suite( 'Extension Test Suite', () => {
 			[ 'backtick', 4 ]
 		] );
 	} );
+
 	test( 'get test title in backticks multiline', () =>{
 		const title = getTestTitles( `
 			test( \`backtick
@@ -72,6 +77,20 @@ suite( 'Extension Test Suite', () => {
 
 		assert.deepEqual( title, [
 			[ 'backtick multiline', 4 ]
+		] );
+	} );
+
+
+	test( 'get test titles in multicases', () =>{
+		const title = getTestTitles( `
+			test( 'first case', t => {})
+
+			test( 'second case', t => {})
+		` );
+
+		assert.deepEqual( title, [
+			[ 'first case', 4 ],
+			[ 'second case', 37 ]
 		] );
 	} );
 

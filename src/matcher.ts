@@ -26,6 +26,12 @@ export function findEndTestTitle( content: string, char: string ): number {
 	return result;
 }
 
+/**
+ * Find test case titles & theor place in the code
+ *
+ * @param codeContent
+ * @returns [test title, index] index of character in the code that starts the test case declaration
+ */
 export function getTestTitles( codeContent: string ): Array<[string, number]> {
 	const re = /test( )?\(/g;
 	const eachLineRegExp = new RegExp( re );
