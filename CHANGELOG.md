@@ -1,9 +1,8 @@
 # Change Log
+## [0.0.1]
 
-All notable changes to the "vsc-plugin-template" extension will be documented in this file.
+Initial release.
+### Added
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
-## [Unreleased]
-
-- Initial release
+- Run a single test file with the command: `AVA: Run tests in this file`
+- Run a single test case with a code lens
