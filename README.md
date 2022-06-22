@@ -6,7 +6,7 @@ Visual Studio Code [AVA](https://github.com/avajs/ava) test runner. This extensi
 
 Run test file via VS Code command or test case via Code Lens
 
-\!\[code lens\]\(images/readme.png\)
+![code lens](images/readme.png)
 
 ## Requirements
 
