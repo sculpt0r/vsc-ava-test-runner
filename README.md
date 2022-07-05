@@ -14,7 +14,13 @@ Run test file via VS Code command or test case via Code Lens
 
 ## Extension Settings
 
----
+This extension contributes the following settings:
+
+* `ava-runner.experimentalEnabled` [ boolean ]: enable all [experimental features](#experimental-features). Those features might be unstable or could be removed from the extension in the feature.
+
+## Experimental Features
+
+--
 
 ## Known Issues
 Single tests are run via the [`--match` option](https://github.com/avajs/ava/blob/main/docs/05-command-line.md#running-tests-with-matching-titles). Be aware that some characters in the test case name have a special meaning.
