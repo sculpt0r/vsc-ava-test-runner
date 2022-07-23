@@ -21,7 +21,7 @@ This extension contributes the following settings:
 
 ## Experimental Features
 
-* CodeLens: run test case by [line number](https://github.com/avajs/ava/blob/main/docs/05-command-line.md#running-tests-at-specific-line-numbers). Please note that some TS projects might not be able to run test case with this code lens. However, this option is more accurate and it is free from the glob pattern issue related with `--match` AVA options.
+* CodeLens: run test case by [line number](https://github.com/avajs/ava/blob/main/docs/05-command-line.md#running-tests-at-specific-line-numbers). Please note that some TS projects might not be able to run test case with this code lens. However, this option is more accurate and it is free from the glob pattern issue related with `--match` AVA options. AVA [`4.3.1`](https://github.com/avajs/ava/releases/tag/v4.3.1) made some improvements in this topic.
 
 ## Known Issues
 Single tests are run via the [`--match` option](https://github.com/avajs/ava/blob/main/docs/05-command-line.md#running-tests-with-matching-titles). Be aware that some characters in the test case name have a special meaning.

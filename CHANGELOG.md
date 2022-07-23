@@ -1,6 +1,8 @@
 # Change Log
 ## [0.0.3]
-
+### Added
+- Properly register plugin option with `package.json`. This allow intellisense for plugin config.
+- Add plugin logo.
 
 ## [0.0.2] (05.07.2022)
 ### Added
