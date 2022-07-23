@@ -3,6 +3,7 @@
 ### Added
 - Properly register plugin option with `package.json`. This allow intellisense for plugin config.
 - Add plugin logo.
+- Update dependencies.
 
 ## [0.0.2] (05.07.2022)
 ### Added
