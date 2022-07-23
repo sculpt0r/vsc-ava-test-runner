@@ -8,10 +8,10 @@ Visual Studio Code [AVA](https://github.com/avajs/ava) test runner. This extensi
 Run test file via VS Code command or test case via Code Lens
 
 ![code lens](images/readme.png)
-
 ## Requirements
 
----
+- This extension assume the project uses & has installed `AVA` package.
+- Extension commands are run via `npx`.
 
 ## Extension Settings
 
@@ -25,12 +25,3 @@ This extension contributes the following settings:
 
 ## Known Issues
 Single tests are run via the [`--match` option](https://github.com/avajs/ava/blob/main/docs/05-command-line.md#running-tests-with-matching-titles). Be aware that some characters in the test case name have a special meaning.
-
-## Laetest Release Notes
-
-### [0.0.2] (05.07.2022)
-#### Added
-- Add extension setting: `ava-runner.experimentalEnabled`
-- Add experimental feature: run test case via [line number](https://github.com/avajs/ava/blob/main/docs/05-command-line.md#running-tests-at-specific-line-numbers). Use the `ava-runner.experimentalEnabled` config option to enable that feature
-
-
