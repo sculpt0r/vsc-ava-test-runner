@@ -17,6 +17,16 @@
 	],
 	"main": "./out/extension.js",
 	"contributes": {
+		"configuration": {
+			"title": "AVA test runner configuration",
+			"properties": {
+				"ava-runner.experimentalEnabled": {
+					"type": "boolean",
+					"default": false,
+					"description": "Enable/disable experimental feautures in this plugin"
+				}
+			}
+		},
 		"commands": [
 			{
 				"command": "vsc-ava-test-runner.runTestsInFile",
