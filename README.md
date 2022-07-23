@@ -1,4 +1,5 @@
 # vsc-ava-test-runner
+[![CI - test](https://github.com/sculpt0r/vsc-ava-test-runner/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/sculpt0r/vsc-ava-test-runner/actions/workflows/test.yml)
 
 Visual Studio Code [AVA](https://github.com/avajs/ava) test runner. This extension helps to run a single test file/test case right from the code.
 
