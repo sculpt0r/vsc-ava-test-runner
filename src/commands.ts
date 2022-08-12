@@ -26,11 +26,10 @@ export function runDebugTestsInFile( args?: string ) {
 			request: 'launch',
 			name: 'AVA debug',
 			cwd: cwd,
-			runtimeExecutable: 'npm',
+			runtimeExecutable: 'npx',
 			runtimeArgs: [
-				'test',
+				'ava',
 				activeFilePath,
-				'--',
 				args
 			],
 			outputCapture: 'std',
