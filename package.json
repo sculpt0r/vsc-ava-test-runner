@@ -28,6 +28,11 @@
 				"ava-runner.packageManager": {
 					"type": "string",
 					"default": "npm",
+					"enum": [
+						"npm",
+						"pnpm",
+						"yarn"
+					],
 					"description": "Package manager used in this project"
 				}
 			}
