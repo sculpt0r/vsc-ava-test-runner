@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { runTestsInFile, runTestsInFileDebug } from './commands';
+import { runTestsInFile, runDebugTestsInFile } from './commands';
 import { getTestTitles } from './matcher';
 import { Configuration } from './configuration';
 
@@ -15,10 +15,14 @@ export function activate( context: vscode.ExtensionContext ) {
 		'vsc-ava-test-runner.runTestsInFile',
 		runTestsInFile
 	);
-	// let runTestsDebugCommand = vscode.commands.registerCommand('vsc-ava-test-runner.runTestsInFileDebug',runTestsInFileDebug);
+
+	let runDebugTestsCommand = vscode.commands.registerCommand(
+		'vsc-ava-test-runner.runDebugTestsInFile',
+		runDebugTestsInFile
+	);
 
 	context.subscriptions.push( runTestsCommand );
-	// context.subscriptions.push(runTestsDebugCommand);
+	context.subscriptions.push( runDebugTestsCommand );
 
 	vscode.languages.registerCodeLensProvider(
 		[ 'javascript', 'typescript' ],
@@ -48,7 +52,10 @@ class AvaCodelens implements vscode.CodeLensProvider {
 			const lenses = [];
 
 			const runCommand = this.createRunTestCaseCommand( title );
+			const runDebugCommand = this.createRunDebugTestCaseCommand( title );
+
 			lenses.push( new vscode.CodeLens( range!, runCommand ) );
+			lenses.push( new vscode.CodeLens( range!, runDebugCommand ) );
 
 			if( config.areExperimentalsEanbled() ){
 				const runByLineCommand = this.createRunTestByLineCommand( line.lineNumber + 1 );
@@ -65,6 +72,18 @@ class AvaCodelens implements vscode.CodeLensProvider {
 		const command = {
 			title: 'Run',
 			command: 'vsc-ava-test-runner.runTestsInFile',
+			// https://github.com/avajs/ava/blob/main/docs/05-command-line.md#running-tests-with-matching-titles
+			// * might be problematic it test title
+			arguments: [ ` --match="${testCaseTitle}"` ],
+		};
+
+		return command;
+	}
+
+	createRunDebugTestCaseCommand( testCaseTitle: string ) {
+		const command = {
+			title: 'Debug',
+			command: 'vsc-ava-test-runner.runDebugTestsInFile',
 			// https://github.com/avajs/ava/blob/main/docs/05-command-line.md#running-tests-with-matching-titles
 			// * might be problematic it test title
 			arguments: [ ` --match="${testCaseTitle}"` ],

@@ -1,4 +1,6 @@
+import path = require( 'path' );
 import * as vscode from 'vscode';
+import { debug, window } from 'vscode';
 
 export function runTestsInFile( args?: string ){
 	const activeFilePath = vscode.window.activeTextEditor?.document.uri.path;
@@ -12,7 +14,33 @@ export function runTestsInFile( args?: string ){
 	}
 }
 
-export function runTestsInFileDebug() {}
+export function runDebugTestsInFile( args?: string ) {
+	args ??= '';
+
+	try {
+		const activeFilePath = vscode.window.activeTextEditor?.document.uri.path;
+		const cwd = path.dirname( activeFilePath! );
+
+		debug.startDebugging( undefined, {
+			type: 'node',
+			request: 'launch',
+			name: 'AVA debug',
+			cwd: cwd,
+			runtimeExecutable: 'npm',
+			runtimeArgs: [
+				'test',
+				activeFilePath,
+				'--',
+				args
+			],
+			outputCapture: 'std',
+			skipFiles: [ '<node_internals>/**/*.js' ]
+		} );
+	} catch ( e: any ) {
+		window.showErrorMessage( e.message );
+	}
+
+}
 
 function runTerminalCmd( cmd: string ): void {
 	const terminalName = 'AVA';
@@ -23,5 +51,4 @@ function runTerminalCmd( cmd: string ): void {
 
 	terminal.sendText( cmd );
 	terminal.show();
-
 }
