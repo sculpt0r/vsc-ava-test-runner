@@ -1,6 +1,7 @@
 import path = require( 'path' );
 import * as vscode from 'vscode';
 import { debug, window } from 'vscode';
+import { Configuration } from './configuration';
 
 export function runTestsInFile( args?: string ){
 	const activeFilePath = vscode.window.activeTextEditor?.document.uri.path;
@@ -21,12 +22,25 @@ export function runDebugTestsInFile( args?: string ) {
 		const activeFilePath = vscode.window.activeTextEditor?.document.uri.path;
 		const cwd = path.dirname( activeFilePath! );
 
+		const packageManagerToBinary = new Map<string, string>( [
+			[ 'npm', 'npx' ],
+			[ 'pnpm', 'pnpx' ],
+			[ 'yarn', 'yarn dxl' ]
+		] );
+		const packageManager = Configuration.load().getPackageManager();
+
+		const executable = packageManagerToBinary.get( packageManager );
+
+		if( executable === undefined ){
+			throw new Error( 'Cannot find executable for your package manager. Check plugin config. Currently set package manager: ' + packageManager );
+		}
+
 		debug.startDebugging( undefined, {
 			type: 'node',
 			request: 'launch',
 			name: 'AVA debug',
 			cwd: cwd,
-			runtimeExecutable: 'npx',
+			runtimeExecutable: executable,
 			runtimeArgs: [
 				'ava',
 				activeFilePath,

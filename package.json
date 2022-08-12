@@ -24,6 +24,11 @@
 					"type": "boolean",
 					"default": false,
 					"description": "Enable/disable experimental feautures in this plugin"
+				},
+				"ava-runner.packageManager": {
+					"type": "string",
+					"default": "npm",
+					"description": "Package manager used in this project"
 				}
 			}
 		},
