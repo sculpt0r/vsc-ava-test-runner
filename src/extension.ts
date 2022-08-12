@@ -67,7 +67,7 @@ class AvaCodelens implements vscode.CodeLensProvider {
 			command: 'vsc-ava-test-runner.runTestsInFile',
 			// https://github.com/avajs/ava/blob/main/docs/05-command-line.md#running-tests-with-matching-titles
 			// * might be problematic it test title
-			arguments: [ ` --match='${testCaseTitle}'` ],
+			arguments: [ ` --match="${testCaseTitle}"` ],
 		};
 
 		return command;
