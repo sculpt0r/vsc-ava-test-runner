@@ -7,8 +7,10 @@ export function runTestsInFile( args?: string ){
 	const activeFilePath = vscode.window.activeTextEditor?.document.uri.path;
 	if( activeFilePath !== undefined )
 	{
+		const executable = getExecutableName();
+
 		args ??= '';
-		const cmd = `npx ava --verbose ${activeFilePath}${args}`;
+		const cmd = `${executable} ava --verbose ${activeFilePath}${args}`;
 		runTerminalCmd( cmd );
 	} else {
 		vscode.window.showWarningMessage( 'No active file to run a test...' );
@@ -22,18 +24,7 @@ export function runDebugTestsInFile( args?: string ) {
 		const activeFilePath = vscode.window.activeTextEditor?.document.uri.path;
 		const cwd = path.dirname( activeFilePath! );
 
-		const packageManagerToBinary = new Map<string, string>( [
-			[ 'npm', 'npx' ],
-			[ 'pnpm', 'pnpx' ],
-			[ 'yarn', 'yarn dxl' ]
-		] );
-		const packageManager = Configuration.load().getPackageManager();
-
-		const executable = packageManagerToBinary.get( packageManager );
-
-		if( executable === undefined ){
-			throw new Error( 'Cannot find executable for your package manager. Check plugin config. Currently set package manager: ' + packageManager );
-		}
+		const executable = getExecutableName();
 
 		debug.startDebugging( undefined, {
 			type: 'node',
@@ -64,4 +55,22 @@ function runTerminalCmd( cmd: string ): void {
 
 	terminal.sendText( cmd );
 	terminal.show();
+}
+
+function getExecutableName(): string | undefined {
+	const packageManagerToBinary = new Map<string, string>( [
+		[ 'npm', 'npx' ],
+		[ 'pnpm', 'pnpx' ],
+		[ 'yarn', 'yarn dxl' ]
+	] );
+
+	const packageManager = Configuration.load().getPackageManager();
+
+	const executable = packageManagerToBinary.get( packageManager );
+
+	if( executable === undefined ){
+		throw new Error( 'Cannot find executable for your package manager. Check plugin config. Currently set package manager: ' + packageManager );
+	}
+
+	return executable;
 }
