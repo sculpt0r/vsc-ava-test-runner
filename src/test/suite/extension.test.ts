@@ -41,7 +41,7 @@ suite( 'Extension Test Suite', () => {
 
 	test( 'get test title with singlequote and escaped singlequote and remove escape character', () =>{
 		const title = getTestTitles( `
-			test('dou \'t\' ble', t => {})
+			test('dou \\'t\\' ble', t => {})
 		` );
 
 		assert.deepEqual( title, [
@@ -52,7 +52,7 @@ suite( 'Extension Test Suite', () => {
 
 	test( 'get test title with escaped singlequote and remove escape character', () =>{
 		const title = getTestTitles( `
-			test("dou \'t\' ble", t => {})
+			test("dou \\'t\\' ble", t => {})
 		` );
 
 		assert.deepEqual( title, [
