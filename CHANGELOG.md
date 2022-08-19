@@ -1,6 +1,7 @@
 # Change Log
 ## [0.0.4]
-
+### Added
+- Debug test case (as Code Lens `Debug`).
 
 ## [0.0.3] (23.07.2022)
 ### Added
