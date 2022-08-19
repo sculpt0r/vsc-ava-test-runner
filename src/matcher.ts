@@ -50,8 +50,6 @@ export function getTestTitles( codeContent: string ): Array<[string, number]> {
 		title = title.replace( /\\'/g, "'" );
 		title = title.replace( /(\n|\t)/g, '' );
 
-		console.log( title );
-
 		testCases.push( [ title, matches.index ] );
 	}
 
