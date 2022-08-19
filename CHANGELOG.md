@@ -1,5 +1,10 @@
 # Change Log
-## [0.0.4]
+
+## [0.0.5] (19.08.2022)
+### Fixed
+- Fix: escape character `\` in test title, makes matching failed
+
+## [0.0.4] (19.08.2022)
 ### Added
 - Debug test case (as Code Lens `Debug`).
 
