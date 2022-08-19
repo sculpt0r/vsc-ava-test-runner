@@ -5,13 +5,13 @@ Visual Studio Code [AVA](https://github.com/avajs/ava) test runner. This extensi
 
 ## Features
 
-Run test file via VS Code command or test case via Code Lens
+Run and debug test file via VS Code command or test case via Code Lens
 
 ![code lens](images/readme.png)
 ## Requirements
 
 - This extension assume the project uses & has installed `AVA` package.
-- Extension commands are run via `npx`.
+- Extension commands are run via `npx`. Should work even if you use `pnpm`.
 
 ## Extension Settings
 
