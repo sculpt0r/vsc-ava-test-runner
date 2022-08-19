@@ -28,6 +28,7 @@ suite( 'Extension Test Suite', () => {
 		] );
 	} );
 
+
 	test( 'get test title with double quote', () =>{
 		const title = getTestTitles( `
 			test("double", t => {})
@@ -35,6 +36,28 @@ suite( 'Extension Test Suite', () => {
 
 		assert.deepEqual( title, [
 			[ 'double', 4 ]
+		] );
+	} );
+
+	test( 'get test title with singlequote and escaped singlequote and remove escape character', () =>{
+		const title = getTestTitles( `
+			test('dou \'t\' ble', t => {})
+		` );
+
+		assert.deepEqual( title, [
+			// eslint-disable-next-line quotes
+			[ "dou 't' ble", 4 ]
+		] );
+	} );
+
+	test( 'get test title with escaped singlequote and remove escape character', () =>{
+		const title = getTestTitles( `
+			test("dou \'t\' ble", t => {})
+		` );
+
+		assert.deepEqual( title, [
+			// eslint-disable-next-line quotes
+			[ "dou 't' ble", 4 ]
 		] );
 	} );
 

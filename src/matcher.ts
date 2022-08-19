@@ -45,6 +45,9 @@ export function getTestTitles( codeContent: string ): Array<[string, number]> {
 		);
 		const endPos = findEndTestTitle( testCaseStartingContent, char );
 		let title = testCaseStartingContent.slice( startPos + 1, endPos );
+		// it is less confusing if there is no additionall escape characters here
+		// eslint-disable-next-line quotes
+		title = title.replace( "\'", "'" );
 		title = title.replace( /(\n|\t)/g, '' );
 
 		testCases.push( [ title, matches.index ] );
