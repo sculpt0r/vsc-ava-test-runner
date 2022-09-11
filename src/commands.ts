@@ -31,6 +31,7 @@ export function runDebugTestsInFile( args?: string ) {
 			runtimeExecutable: 'npx',
 			runtimeArgs: [
 				'ava',
+				'--serial',
 				activeFilePath,
 				args
 			],
