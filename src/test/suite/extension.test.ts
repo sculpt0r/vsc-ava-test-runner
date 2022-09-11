@@ -71,6 +71,16 @@ suite( 'Extension Test Suite', () => {
 		] );
 	} );
 
+	test( 'get test title with concatenation', () =>{
+		const title = getTestTitles( `
+			test( 'test' + 'title', t => {})
+		` );
+
+		assert.deepEqual( title, [
+			[ 'testtitle', 4 ]
+		] );
+	} );
+
 	test( 'get test title in another line', () =>{
 		const title = getTestTitles( `
 			test(
