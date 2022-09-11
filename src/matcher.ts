@@ -50,6 +50,10 @@ export function getTestTitles( codeContent: string ): Array<[string, number]> {
 		title = title.replace( /\\'/g, "'" );
 		title = title.replace( /(\n|\t)/g, '' );
 
+		// titles concatenation
+		const reg = new RegExp( `${char}\\s\\+\\s${char}`, 'g' );
+		title = title.replace( reg, '' );
+
 		testCases.push( [ title, matches.index ] );
 	}
 
