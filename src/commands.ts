@@ -5,7 +5,7 @@ import { debug, window } from 'vscode';
 import { Configuration } from './configuration';
 
 export function runTestsInFile( args?: string ){
-	const activeFilePath = vscode.window.activeTextEditor?.document.uri.path;
+	const activeFilePath = getActiveFilePath();
 	if( activeFilePath !== undefined )
 	{
 		args ??= '';
@@ -20,7 +20,7 @@ export function runDebugTestsInFile( args?: string ) {
 	args ??= '';
 
 	try {
-		const activeFilePath = vscode.window.activeTextEditor?.document.uri.path;
+		const activeFilePath = getActiveFilePath();
 		const cwd = path.dirname( activeFilePath! );
 
 		debug.startDebugging( undefined, {
@@ -54,4 +54,8 @@ function runTerminalCmd( cmd: string ): void {
 
 	terminal.sendText( cmd );
 	terminal.show();
+}
+
+function getActiveFilePath(){
+	return vscode.window.activeTextEditor?.document.uri.fsPath;
 }
