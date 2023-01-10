@@ -4,13 +4,37 @@ import * as vscode from 'vscode';
 import { debug, window } from 'vscode';
 import { Configuration } from './configuration';
 
+export function runTestsAndWatchInFile( args?: string ){
+	const activeFilePath = getActiveFilePath();
+	if( activeFilePath !== undefined )
+	{
+		args ??= '';
+		const cmd = `npx ava --verbose ${activeFilePath}${args} --watch`;
+		const terminalName = 'AVA--watch';
+
+		// kill current running watch
+		const terminal = vscode.window.terminals
+			.find( ( {name} ) => name === terminalName );
+
+		// WORKING 1 refactor
+		if( terminal !== undefined ){
+			// Kill current working process with Ctrl + C
+			terminal.sendText('\u0003Y\u000D');
+		}
+
+		runTerminalCmd( terminalName, cmd );
+	} else {
+		vscode.window.showWarningMessage( 'No active file to run a test...' );
+	}
+}
+
 export function runTestsInFile( args?: string ){
 	const activeFilePath = getActiveFilePath();
 	if( activeFilePath !== undefined )
 	{
 		args ??= '';
 		const cmd = `npx ava --verbose ${activeFilePath}${args}`;
-		runTerminalCmd( cmd );
+		runTerminalCmd( 'AVA', cmd );
 	} else {
 		vscode.window.showWarningMessage( 'No active file to run a test...' );
 	}
@@ -44,9 +68,7 @@ export function runDebugTestsInFile( args?: string ) {
 	}
 
 }
-
-function runTerminalCmd( cmd: string ): void {
-	const terminalName = 'AVA';
+function runTerminalCmd( terminalName: string, cmd: string ): void {
 	const terminal = vscode.window.terminals
 		.find( ( {name} ) => name === terminalName )
 		??

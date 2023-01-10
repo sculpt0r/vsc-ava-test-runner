@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { AvaCodelens } from './ava-code-lens';
-import { runTestsInFile, runDebugTestsInFile } from './commands';
+import { runTestsInFile, runDebugTestsInFile, runTestsAndWatchInFile } from './commands';
 
 export function activate( context: vscode.ExtensionContext ) {
 	// The command has been defined in the package.json file
@@ -11,12 +11,18 @@ export function activate( context: vscode.ExtensionContext ) {
 		runTestsInFile
 	);
 
+	let runTestsAndWatchCommand = vscode.commands.registerCommand(
+		'vsc-ava-test-runner.runTestsAndWatchInFile',
+		runTestsAndWatchInFile
+	);
+
 	let runDebugTestsCommand = vscode.commands.registerCommand(
 		'vsc-ava-test-runner.runDebugTestsInFile',
 		runDebugTestsInFile
 	);
 
 	context.subscriptions.push( runTestsCommand );
+	context.subscriptions.push( runTestsAndWatchCommand );
 	context.subscriptions.push( runDebugTestsCommand );
 
 	vscode.languages.registerCodeLensProvider(
