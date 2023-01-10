@@ -63,7 +63,7 @@ export class AvaCodelens implements vscode.CodeLensProvider {
 		return command;
 	}
 
-	createRunDebugTestCaseCommand(lensDisplayName: string, testCaseTitle: string ) {
+	createRunDebugTestCaseCommand( lensDisplayName: string, testCaseTitle: string ) {
 		const command = {
 			title: lensDisplayName,
 			command: 'vsc-ava-test-runner.runDebugTestsInFile',

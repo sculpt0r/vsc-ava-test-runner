@@ -19,7 +19,7 @@ export function runTestsAndWatchInFile( args?: string ){
 		// WORKING 1 refactor
 		if( terminal !== undefined ){
 			// Kill current working process with Ctrl + C
-			terminal.sendText('\u0003Y\u000D');
+			terminal.sendText( '\u0003Y\u000D' );
 		}
 
 		runTerminalCmd( terminalName, cmd );
