@@ -1,5 +1,11 @@
 # Change Log
 
+## [0.0.7] (26.01.2023)
+
+### Added
+- Run a single test file in DEBUG mode.
+- Add option: `--watch` to single test file and single test case run.
+
 ## [0.0.6] (19.12.2022)
 ### Fixed
 
