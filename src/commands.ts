@@ -1,8 +1,6 @@
 import path = require( 'path' );
-import { env } from 'process';
 import * as vscode from 'vscode';
 import { debug, window } from 'vscode';
-import { Configuration } from './configuration';
 
 export function runTestsAndWatchInFile( args?: string ){
 	const activeFilePath = getActiveFilePath();
