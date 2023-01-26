@@ -20,10 +20,12 @@ export class AvaCodelens implements vscode.CodeLensProvider {
 
 			const lenses = [];
 
-			const runCommand = this.createRunTestCaseCommand( title );
-			const runDebugCommand = this.createRunDebugTestCaseCommand( title );
+			const runCommand = this.createRunTestCaseCommand( 'Run', title );
+			const runCommandAndWatch = this.createRunTestCaseAndWatchCommand( '--watch', title );
+			const runDebugCommand = this.createRunDebugTestCaseCommand( 'Debug', title );
 
 			lenses.push( new vscode.CodeLens( range!, runCommand ) );
+			lenses.push( new vscode.CodeLens( range!, runCommandAndWatch ) );
 			lenses.push( new vscode.CodeLens( range!, runDebugCommand ) );
 
 			if( config.areExperimentalsEanbled() ){
@@ -37,9 +39,9 @@ export class AvaCodelens implements vscode.CodeLensProvider {
 		return codeLenses;
 	}
 
-	createRunTestCaseCommand( testCaseTitle: string ) {
+	createRunTestCaseCommand( lensDisplayName: string, testCaseTitle: string ) {
 		const command = {
-			title: 'Run',
+			title: lensDisplayName,
 			command: 'vsc-ava-test-runner.runTestsInFile',
 			// https://github.com/avajs/ava/blob/main/docs/05-command-line.md#running-tests-with-matching-titles
 			// * might be problematic it test title
@@ -49,9 +51,21 @@ export class AvaCodelens implements vscode.CodeLensProvider {
 		return command;
 	}
 
-	createRunDebugTestCaseCommand( testCaseTitle: string ) {
+	createRunTestCaseAndWatchCommand( lensDisplayName: string, testCaseTitle: string ) {
 		const command = {
-			title: 'Debug',
+			title: lensDisplayName,
+			command: 'vsc-ava-test-runner.runTestsAndWatchInFile',
+			// https://github.com/avajs/ava/blob/main/docs/05-command-line.md#running-tests-with-matching-titles
+			// * might be problematic it test title
+			arguments: [ ` --match="${testCaseTitle}"` ],
+		};
+
+		return command;
+	}
+
+	createRunDebugTestCaseCommand( lensDisplayName: string, testCaseTitle: string ) {
+		const command = {
+			title: lensDisplayName,
 			command: 'vsc-ava-test-runner.runDebugTestsInFile',
 			// https://github.com/avajs/ava/blob/main/docs/05-command-line.md#running-tests-with-matching-titles
 			// * might be problematic it test title

@@ -5,7 +5,7 @@
 	"publisher": "sculpt0r",
 	"repository": "https://github.com/sculpt0r/vsc-ava-test-runner",
 	"icon": "images/logo_scaled.png",
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"engines": {
 		"vscode": "^1.69.0"
 	},
@@ -31,6 +31,14 @@
 			{
 				"command": "vsc-ava-test-runner.runTestsInFile",
 				"title": "AVA: Run tests in this file"
+			},
+			{
+				"command": "vsc-ava-test-runner.runTestsAndWatchInFile",
+				"title": "AVA[WATCH]: Run tests in this file"
+			},
+			{
+				"command": "vsc-ava-test-runner.runDebugTestsInFile",
+				"title": "AVA[DEBUG]: Run tests in this file"
 			}
 		]
 	},
@@ -45,16 +53,16 @@
 		"test": "node ./out/test/runTest.js"
 	},
 	"devDependencies": {
-		"@types/glob": "^7.2.0",
-		"@types/mocha": "^9.1.1",
-		"@types/node": "^18.0.6",
-		"@types/vscode": "^1.69.0",
-		"@typescript-eslint/eslint-plugin": "^5.30.7",
-		"@typescript-eslint/parser": "^5.30.7",
-		"@vscode/test-electron": "^2.1.5",
-		"eslint": "^8.20.0",
-		"glob": "^8.0.3",
-		"mocha": "^10.0.0",
-		"typescript": "^4.7.4"
+		"@types/glob": "^8.0.1",
+		"@types/mocha": "^10.0.1",
+		"@types/node": "^18.11.18",
+		"@types/vscode": "^1.74.0",
+		"@typescript-eslint/eslint-plugin": "^5.49.0",
+		"@typescript-eslint/parser": "^5.49.0",
+		"@vscode/test-electron": "^2.2.2",
+		"eslint": "^8.32.0",
+		"glob": "^8.1.0",
+		"mocha": "^10.2.0",
+		"typescript": "^4.9.4"
 	}
 }
