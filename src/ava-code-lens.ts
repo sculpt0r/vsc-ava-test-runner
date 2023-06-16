@@ -15,6 +15,10 @@ export class AvaCodelens implements vscode.CodeLensProvider {
 
 		const codeLenses = results.flatMap( ( [ title, match ] ) => {
 			const line = document.lineAt( document.positionAt( match ).line );
+
+			// (GH-8) Skip code lenses for commented lines.
+			if( this.isLineCommented( line.text ) ){ return []; }
+
 			const position = new vscode.Position( line.lineNumber, 0 );
 			const range = document.getWordRangeAtPosition( position );
 
@@ -37,6 +41,12 @@ export class AvaCodelens implements vscode.CodeLensProvider {
 		} );
 
 		return codeLenses;
+	}
+
+	isLineCommented( line: string ): boolean {
+		const commentedLineRegExp = /^\s*(\/\/|\/\*|\*).*/;
+
+		return commentedLineRegExp.test( line );
 	}
 
 	createRunTestCaseCommand( lensDisplayName: string, testCaseTitle: string ) {
