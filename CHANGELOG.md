@@ -1,5 +1,13 @@
 # Change Log
 
+## [0.0.8] (16.06.2023)
+
+### Fixed
+
+- Fix: https://github.com/sculpt0r/vsc-ava-test-runner/issues/8: Parsing error with single-line comments.
+  - commented code broke code lenses, so they disapper for the entire file
+
+
 ## [0.0.7] (26.01.2023)
 
 ### Added
