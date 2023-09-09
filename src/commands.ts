@@ -38,6 +38,11 @@ export function runTestsInFile( args?: string ){
 	}
 }
 
+export function openDocumentation(): void {
+  const avaDocsUrl = 'https://github.com/avajs/ava/tree/main/docs';
+  vscode.env.openExternal( vscode.Uri.parse( avaDocsUrl ) );
+}
+
 export function runDebugTestsInFile( args?: string ) {
 	args ??= '';
 
