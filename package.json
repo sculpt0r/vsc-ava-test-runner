@@ -5,7 +5,7 @@
   "publisher": "sculpt0r",
   "repository": "https://github.com/sculpt0r/vsc-ava-test-runner",
   "icon": "images/logo_scaled.png",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "engines": {
     "vscode": "^1.79.0"
   },
