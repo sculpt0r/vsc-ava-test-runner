@@ -132,6 +132,31 @@ jobs:
           asset_name: ${{ steps.package_vsix.outputs.vsix }}
           asset_content_type: application/octet-stream
 
+      - name: Debug VSCE_PAT presence (tags only)
+        if: ${{ startsWith(github.ref, 'refs/tags/') }}
+        run: |
+          # Check whether the VSCE_PAT env var is present without printing the token.
+          if [ -z "${VSCE_PAT:-}" ]; then
+            echo "DEBUG: VSCE_PAT is empty or not set in the job environment."
+            exit 0
+          fi
+          # Print length and detect newlines/whitespace
+          LEN=$(printf '%s' "$VSCE_PAT" | wc -c)
+          LEN_NO_NL=$(printf '%s' "$VSCE_PAT" | tr -d '\n' | wc -c)
+          echo "DEBUG: VSCE_PAT is set (length: $LEN bytes)"
+          if [ "$LEN_NO_NL" -ne "$LEN" ]; then
+            echo "DEBUG: VSCE_PAT contains newline characters (length without newlines: $LEN_NO_NL)"
+          fi
+          # Show a masked hint (first/last 2 chars) without revealing the token:
+          # Only show when token length is >=6 to avoid revealing too much
+          if [ "$LEN" -ge 6 ]; then
+            PREFIX=$(printf '%s' "$VSCE_PAT" | cut -c1-2)
+            SUFFIX=$(printf '%s' "$VSCE_PAT" | rev | cut -c1-2 | rev)
+            echo "DEBUG: VSCE_PAT mask: ${PREFIX}...${SUFFIX} (do not share this output publicly)"
+          else
+            echo "DEBUG: VSCE_PAT too short to display mask."
+          fi
+
       - name: Publish to Visual Studio Marketplace (tags only, requires PAT)
         if: ${{ startsWith(github.ref, 'refs/tags/') && env.VSCE_PAT != '' }}
         run: |
