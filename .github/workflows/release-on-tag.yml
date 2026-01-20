@@ -1,10 +1,13 @@
-name: Release VSIX on tag
+name: Release VSIX on tag or master
 
-# Trigger on version tags starting with "v" (we'll filter out RC tags in the job)
+# Trigger on pushes to master and on version tags starting with "v".
 on:
   push:
+    branches:
+      - master
     tags:
       - "v*"
+  workflow_dispatch:
 
 # Allow creating releases and uploading assets
 permissions:
@@ -13,9 +16,15 @@ permissions:
 jobs:
   release:
     name: Package, attach VSIX and publish
-    # Ensure only v* tags and exclude any tag containing "rc"
-    if: ${{ startsWith(github.ref_name, 'v') && !contains(github.ref_name, 'rc') }}
+    # Run for either:
+    # - a tag that starts with "v" and does not contain "rc"
+    # - the master branch
+    if: ${{ (startsWith(github.ref, 'refs/tags/') && startsWith(github.ref_name, 'v') && !contains(github.ref_name, 'rc')) || github.ref == 'refs/heads/master' }}
     runs-on: ubuntu-latest
+
+    # Expose the secret via env so we can test its presence using env.* in if expressions
+    env:
+      VSCE_PAT: ${{ secrets.VSCE_PAT }}
 
     steps:
       - name: Checkout repository
@@ -48,16 +57,20 @@ jobs:
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Install dependencies (if any)
-        if: fileExists('package-lock.json') || fileExists('yarn.lock')
+        # We do the existence checks inside the script to avoid using unsupported expression functions in `if`
         run: |
           if [ -f package-lock.json ]; then
             npm ci
           elif [ -f yarn.lock ]; then
             yarn install --frozen-lockfile || true
+          else
+            echo "No lockfile found; skipping dependency install."
           fi
 
-      - name: Sync package.json version with tag
+      - name: Sync package.json version with tag (if tag)
         id: sync_version
+        # Only adjust package.json when we're running for a tag
+        if: ${{ startsWith(github.ref, 'refs/tags/') }}
         run: |
           # Determine tag and semver (strip leading v if present)
           TAG="${GITHUB_REF#refs/tags/}"
@@ -95,7 +108,8 @@ jobs:
           fi
           echo "vsix=$VSIX_FILE" >> $GITHUB_OUTPUT
 
-      - name: Create GitHub Release
+      - name: Create GitHub Release (tags only)
+        if: ${{ startsWith(github.ref, 'refs/tags/') && startsWith(github.ref_name, 'v') && !contains(github.ref_name, 'rc') }}
         id: create_release
         uses: actions/create-release@v1
         env:
@@ -107,7 +121,8 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload VSIX to Release
+      - name: Upload VSIX to Release (tags only)
+        if: ${{ startsWith(github.ref, 'refs/tags/') && startsWith(github.ref_name, 'v') && !contains(github.ref_name, 'rc') }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -117,16 +132,14 @@ jobs:
           asset_name: ${{ steps.package_vsix.outputs.vsix }}
           asset_content_type: application/octet-stream
 
-      - name: Publish to Visual Studio Marketplace
-        if: ${{ secrets.VSCE_PAT != '' }}
-        env:
-          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+      - name: Publish to Visual Studio Marketplace (tags only, requires PAT)
+        if: ${{ startsWith(github.ref, 'refs/tags/') && env.VSCE_PAT != '' }}
         run: |
           echo "Publishing extension to Visual Studio Marketplace..."
           # vsce will use publisher from package.json; provide PAT via env
           npx vsce publish --pat "$VSCE_PAT"
 
-      - name: Skip Marketplace publish (no PAT)
-        if: ${{ secrets.VSCE_PAT == '' }}
+      - name: Skip Marketplace publish (tags only, no PAT)
+        if: ${{ startsWith(github.ref, 'refs/tags/') && env.VSCE_PAT == '' }}
         run: |
           echo "Secret VSCE_PAT not provided — skipping publish to Visual Studio Marketplace."
