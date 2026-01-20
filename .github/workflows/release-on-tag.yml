@@ -1,0 +1,132 @@
+name: Release VSIX on tag
+
+# Trigger on version tags starting with "v" (we'll filter out RC tags in the job)
+on:
+  push:
+    tags:
+      - "v*"
+
+# Allow creating releases and uploading assets
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Package, attach VSIX and publish
+    # Ensure only v* tags and exclude any tag containing "rc"
+    if: ${{ startsWith(github.ref_name, 'v') && !contains(github.ref_name, 'rc') }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # needed to read annotated tag messages and full history
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+
+      - name: Install vsce
+        run: |
+          # install globally so `vsce` is available; pinning is optional
+          npm install -g vsce
+
+      - name: Prepare release notes from tag annotation
+        id: prepare_notes
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          echo "Detected tag: $TAG"
+          BODY="$(git for-each-ref --format='%(contents)' "refs/tags/$TAG" 2>/dev/null || true)"
+          if [ -z "$BODY" ]; then
+            BODY="$(git log -1 --pretty=format:'%h - %s%n%n%b' "refs/tags/$TAG" || true)"
+          fi
+          echo "$BODY" > release_body.md
+          echo "release_body<<EOF" >> $GITHUB_OUTPUT
+          cat release_body.md
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Install dependencies (if any)
+        if: fileExists('package-lock.json') || fileExists('yarn.lock')
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          elif [ -f yarn.lock ]; then
+            yarn install --frozen-lockfile || true
+          fi
+
+      - name: Sync package.json version with tag
+        id: sync_version
+        run: |
+          # Determine tag and semver (strip leading v if present)
+          TAG="${GITHUB_REF#refs/tags/}"
+          echo "Detected tag: $TAG"
+          SEMVER="${TAG#v}"
+          echo "Syncing package.json version to: $SEMVER"
+          if [ ! -f package.json ]; then
+            echo "No package.json found; skipping version sync."
+            exit 0
+          fi
+          # Prefer jq if available, otherwise use node to modify package.json
+          if command -v jq >/dev/null 2>&1; then
+            jq --arg v "$SEMVER" '.version = $v' package.json > package.json.tmp && mv package.json.tmp package.json
+          else
+            node -e "const fs=require('fs');const p=JSON.parse(fs.readFileSync('package.json','utf8'));p.version='$SEMVER';fs.writeFileSync('package.json',JSON.stringify(p,null,2)+'\n');"
+          fi
+          # Commit the change so that any tools reading git-backed files see the updated version.
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+          git add package.json || true
+          git commit -m "chore(release): sync package.json version to $SEMVER [skip ci]" || true
+
+      - name: Package the extension (.vsix)
+        id: package_vsix
+        run: |
+          # vsce will read publisher & version from package.json
+          # This produces a .vsix in the workspace root.
+          npx vsce package
+          # Find the produced file
+          VSIX_FILE="$(ls *.vsix 2>/dev/null | head -n1 || true)"
+          if [ -z "$VSIX_FILE" ]; then
+            echo "No .vsix produced, failing build."
+            ls -la
+            exit 1
+          fi
+          echo "vsix=$VSIX_FILE" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: ${{ github.ref_name }}
+          body_path: release_body.md
+          draft: false
+          prerelease: false
+
+      - name: Upload VSIX to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.package_vsix.outputs.vsix }}
+          asset_name: ${{ steps.package_vsix.outputs.vsix }}
+          asset_content_type: application/octet-stream
+
+      - name: Publish to Visual Studio Marketplace
+        if: ${{ secrets.VSCE_PAT != '' }}
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: |
+          echo "Publishing extension to Visual Studio Marketplace..."
+          # vsce will use publisher from package.json; provide PAT via env
+          npx vsce publish --pat "$VSCE_PAT"
+
+      - name: Skip Marketplace publish (no PAT)
+        if: ${{ secrets.VSCE_PAT == '' }}
+        run: |
+          echo "Secret VSCE_PAT not provided — skipping publish to Visual Studio Marketplace."
