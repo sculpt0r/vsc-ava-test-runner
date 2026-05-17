@@ -6,24 +6,24 @@
  * @param content
  */
 export function findTestTitleOpeningCharacter(
-	content: string
+  content: string,
 ): [string, number] {
-	const re = /(?<character>('|"|`){1})/;
-	const match = content.match( re );
+  const re = /(?<character>('|"|`){1})/;
+  const match = content.match( re );
 
-	const char = match?.groups?.character ?? '';
-	const pos = match?.index ?? -1;
+  const char = match?.groups?.character ?? '';
+  const pos = match?.index ?? -1;
 
-	return [ char, pos ];
+  return [ char, pos ];
 }
 
 export function findEndTestTitle( content: string, char: string ): number {
-	// find endquote followed by coma
-	// given char is the char used for quotation
+  // find endquote followed by coma
+  // given char is the char used for quotation
 
-	const result = content.indexOf( `${char},` );
+  const result = content.indexOf( `${char},` );
 
-	return result;
+  return result;
 }
 
 /**
@@ -33,29 +33,29 @@ export function findEndTestTitle( content: string, char: string ): number {
  * @returns [test title, index] index of character in the code that starts the test case declaration
  */
 export function getTestTitles( codeContent: string ): Array<[string, number]> {
-	const re = /test( )?\(/g;
-	const eachLineRegExp = new RegExp( re );
+  const re = /(test|serial)( )?\(/g;
+  const eachLineRegExp = new RegExp( re );
 
-	let matches;
-	const testCases: Array<[string, number]> = [];
-	while ( ( matches = eachLineRegExp.exec( codeContent ) ) !== null ) {
-		const testCaseStartingContent = codeContent.slice( matches.index );
-		const [ char, startPos ] = findTestTitleOpeningCharacter(
-			testCaseStartingContent
-		);
-		const endPos = findEndTestTitle( testCaseStartingContent, char );
-		let title = testCaseStartingContent.slice( startPos + 1, endPos );
-		// it is less confusing if there is no additionall escape characters here
-		// eslint-disable-next-line quotes
-		title = title.replace( /\\'/g, "'" );
-		title = title.replace( /(\n|\t)/g, '' );
+  let matches;
+  const testCases: Array<[string, number]> = [];
+  while ( ( matches = eachLineRegExp.exec( codeContent ) ) !== null ) {
+    const testCaseStartingContent = codeContent.slice( matches.index );
+    const [ char, startPos ] = findTestTitleOpeningCharacter(
+      testCaseStartingContent,
+    );
+    const endPos = findEndTestTitle( testCaseStartingContent, char );
+    let title = testCaseStartingContent.slice( startPos + 1, endPos );
+    // it is less confusing if there is no additionall escape characters here
+    // eslint-disable-next-line quotes
+    title = title.replace( /\\'/g, "'" );
+    title = title.replace( /(\n|\t)/g, '' );
 
-		// titles concatenation
-		const reg = new RegExp( `${char}\\s\\+\\s${char}`, 'g' );
-		title = title.replace( reg, '' );
+    // titles concatenation
+    const reg = new RegExp( `${char}\\s\\+\\s${char}`, 'g' );
+    title = title.replace( reg, '' );
 
-		testCases.push( [ title, matches.index ] );
-	}
+    testCases.push( [ title, matches.index ] );
+  }
 
-	return testCases;
+  return testCases;
 }
